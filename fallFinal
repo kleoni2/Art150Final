@@ -1,0 +1,1628 @@
+
+// Neopixel initialization
+
+  #include <Adafruit_GFX.h>
+  #include <Adafruit_NeoMatrix.h>
+  #include <Adafruit_NeoPixel.h>
+  #ifndef PSTR
+   #define PSTR // Make Arduino Due happy
+  #endif
+  #ifdef __AVR__
+    #include <avr/power.h>
+  #endif
+  
+  // Which pins on the Arduino is connected to the NeoPixels?
+  #define PIN1           2
+  #define PIN2           3
+  #define PIN3           4
+  
+  // How many NeoPixels are attached to the Arduino?
+  #define NUMPIXELS      25
+  
+  // When we setup the NeoPixel library, we tell it how many pixels, and which pin to use to send signals.
+  // Note that for older NeoPixel strips you might need to change the third parameter--see the strandtest
+  // example for more information on possible values.
+
+  Adafruit_NeoMatrix pixel1 = Adafruit_NeoMatrix(5, 5, PIN1,
+  NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+  NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
+  NEO_GRB            + NEO_KHZ800);
+
+  Adafruit_NeoMatrix pixel2 = Adafruit_NeoMatrix(5, 5, PIN2,
+  NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+  NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
+  NEO_GRB            + NEO_KHZ800);  
+
+  Adafruit_NeoMatrix pixel3 = Adafruit_NeoMatrix(8, 5, PIN3,
+  NEO_MATRIX_TOP     + NEO_MATRIX_LEFT +
+  NEO_MATRIX_ROWS + NEO_MATRIX_PROGRESSIVE,
+  NEO_GRB            + NEO_KHZ800);
+  
+//Adafruit_NeoPixel pixel1 = Adafruit_NeoPixel(NUMPIXELS, PIN1, NEO_GRB + NEO_KHZ800);    // right eye
+//Adafruit_NeoPixel pixel2 = Adafruit_NeoPixel(NUMPIXELS, PIN2, NEO_GRB + NEO_KHZ800);    // left eye
+//Adafruit_NeoPixel pixel3 = Adafruit_NeoPixel(40, PIN3, NEO_GRB + NEO_KHZ800);  // mouth
+
+// Keypad initialization
+
+  #include <Keypad.h>
+  
+  const byte ROWS = 4; //four rows
+  const byte COLS = 4; //four columns
+  char keys[ROWS][COLS] = {
+      {'1','2','3','A'},
+      {'4','5','6','B'},
+      {'7','8','9','C'},
+      {'*','0','#','D'}
+  };
+  
+  byte rowPins[ROWS] = {13, 12, 11, 10}; //connect to the row pinouts of the keypad
+  byte colPins[COLS] = {9, 8, 7, 6}; //connect to the column pinouts of the keypad
+  
+  Keypad customKeypad = Keypad( makeKeymap(keys), rowPins, colPins, ROWS, COLS );
+
+//Misc. initialization
+
+  int red = 127;
+  int green = 255;
+  int blue = 212;
+
+  char letterInput = 'A';
+  int numberInput = 1;
+  int eyeNumInput = 1;
+  int mouthNumInput = 1;
+  int faceSetInput = 0;
+
+  int delayTime = 20;
+  long randomBlinkTime = 0;
+  unsigned long previousMillis = 0; 
+  
+void setup() {
+  pixel1.begin(); // This initializes the NeoPixel library.
+  pixel2.begin();
+  pixel3.begin();
+
+  randomBlinkTime = random(2000, 10000);
+  
+  Serial.begin(9600);
+
+}
+
+void resetEyes() {
+  // resets eyes
+    for(int i = 0; i < 25; i++){
+      pixel1.setPixelColor(i, pixel1.Color(0,0,0));
+      pixel2.setPixelColor(i, pixel2.Color(0,0,0));
+      pixel1.show();
+      pixel2.show();    
+                                }                         
+}
+
+void resetMouth(){
+  // resets mouth
+   for(int i = 0; i <40; i++){
+     pixel3.setPixelColor(i, pixel3.Color(0,0,0));
+     pixel3.show();
+                               }
+}
+
+// eyes void =======================================================================================================================================================================================
+
+void eyesNormal(){
+// 0 1 0 0 0 //    // 0 1 0 0 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+
+//  Pixel 1            Pixel 2  //
+
+// setting the LED pixels to turn on 
+  pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+  pixel1.show();
+  
+  pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+
+//            delay(randomBlinkTime);
+//            eyesNormalBlink();
+//          // gives a random time for the next blink
+//            randomBlinkTime = random(2000, 10000);    
+}
+
+void eyesHappy(){
+// 1 1 0 0 0 //    // 0 0 0 1 1 //
+// 0 0 1 1 0 //    // 0 1 1 0 0 //
+// 0 0 0 0 1 //    // 1 0 0 0 0 //
+// 0 0 1 1 0 //    // 0 1 1 0 0 //
+// 1 1 0 0 0 //    // 0 0 0 1 1 //
+
+//  Pixel 1            Pixel 2  //
+
+// setting the LED pixels to turn on 
+  pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(21, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+  pixel1.setPixelColor(3, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(24, pixel1.Color(red,green,blue));
+  pixel1.show();
+    
+}
+
+void eyesWink(){
+// 1 1 0 0 0 //    // 0 1 0 0 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 0 0 0 0 1 //    // 0 0 1 1 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 1 1 0 0 0 //    // 0 0 1 1 0 //
+
+//  Pixel 1            Pixel 2  //
+  pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(21, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+  pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+  pixel1.show();
+}
+
+void eyesClosed(){
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+// 1 1 1 1 1 //    // 1 1 1 1 1 //
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+
+//  Pixel 1            Pixel 2  //
+  
+  pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(11, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+  pixel1.show();
+
+  pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(11, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+  pixel2.show();
+  
+}
+
+void eyesDizzy(){
+// 0 1 1 1 0 //    // 0 1 1 1 0 //
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+// 1 0 1 1 1 //    // 1 0 1 1 1 //
+// 1 0 0 0 0 //    // 1 0 0 0 0 //
+// 0 1 1 1 0 //    // 0 1 1 1 0 //
+ 
+//  Pixel 1            Pixel 2  //
+
+  pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(2, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(3, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(5, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(9, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(10, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(13, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(14, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(19, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(21, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(22, pixel1.Color(red,green,blue)); 
+  pixel1.setPixelColor(23, pixel1.Color(red,green,blue));  
+  pixel1.show();
+
+  pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(2, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(3, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(5, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(9, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(10, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(13, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(14, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(19, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(21, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(22, pixel2.Color(red,green,blue)); 
+  pixel2.setPixelColor(23, pixel2.Color(red,green,blue));  
+  pixel2.show();
+   
+}
+
+void eyesDead(){
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+// 0 1 0 1 0 //    // 0 1 0 1 0 //
+// 0 0 1 0 0 //    // 0 0 1 0 0 //
+// 0 1 0 1 0 //    // 0 1 0 1 0 //
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+  
+//  Pixel 1            Pixel 2  //
+
+  pixel1.setPixelColor(0, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(20, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(24, pixel1.Color(red,green,blue));
+  pixel1.show();  
+
+  pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(4, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(18, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(24, pixel2.Color(red,green,blue));
+  pixel2.show();  
+}
+
+void eyesSurprised(){
+// 1 1 1 1 1 //    // 1 1 1 1 1 //
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+// 1 0 0 0 1 //    // 1 0 0 0 1 //
+// 1 1 1 1 1 //    // 1 1 1 1 1 //
+   
+//  Pixel 1            Pixel 2  //
+
+  pixel1.setPixelColor(0, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(2, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(3, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(20, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(21, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(24, pixel1.Color(red,green,blue));
+  pixel1.show();
+
+  pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(2, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(3, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(4, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(21, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(24, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+//  delay(randomBlinkTime);
+//  eyesSurprisedBlink();
+//  // gives a random time for the next blink
+//  randomBlinkTime = random(2000, 10000);    
+   
+}
+
+void eyesReally(){
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+// 0 1 1 1 0 //    // 0 1 1 1 0 //
+// 1 0 1 1 0 //    // 1 0 1 1 0 //
+// 0 0 1 1 0 //    // 0 0 1 1 0 //
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+    
+//  Pixel 1            Pixel 2  //
+
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+  pixel1.show();
+  
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+//  delay(randomBlinkTime);
+//  eyesReallyBlink();
+//  // gives a random time for the next blink
+//  randomBlinkTime = random(2000, 10000);      
+
+}
+
+void eyesAngry(){
+// 1 0 0 0 0 //    // 0 0 0 0 1 //
+// 0 1 0 0 0 //    // 0 0 0 1 0 //
+// 0 0 1 0 0 //    // 0 0 1 0 0 //
+// 0 0 0 1 0 //    // 0 1 0 0 0 //
+// 0 0 0 0 1 //    // 1 0 0 0 0 //
+    
+//  Pixel 1            Pixel 2  //
+
+  pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(24, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+  pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(20, pixel1.Color(red,green,blue));
+  pixel1.show();
+
+}
+
+
+void eyesSquint(){
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+// 1 1 1 1 1 //    // 1 1 1 1 1 //
+// 0 0 1 0 0 //    // 0 0 1 0 0 //
+// 1 1 1 1 1 //    // 1 1 1 1 1 //
+// 0 0 0 0 0 //    // 0 0 0 0 0 //
+    
+//  Pixel 1            Pixel 2  //
+
+  pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+  pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+  pixel1.show();
+
+  pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(18, pixel2.Color(red,green,blue));
+  pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+  pixel2.show();
+
+}
+
+void eyesNormalBlink(){
+
+    //*********** BLINK CYCLE ***********//
+  
+    //********** STEP ONE **********//
+    // 0 1 0 0 0 //    // 0 1 0 0 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    
+    //********** STEP TWO **********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 1 0 0 0 //    // 0 1 0 0 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+  
+    //********* STEP THREE *********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+
+    //********** STEP FOUR *********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 1 0 0 0 //    // 0 1 0 0 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+
+    //********** STEP FIVE *********//
+    // 0 1 0 0 0 //    // 0 1 0 0 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+
+    //********** STEP ONE **********//
+      resetEyes();
+      pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+      pixel1.show();
+       
+      pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+      pixel2.show();
+
+      delay(delayTime);
+      
+    //********** STEP TWO **********//
+      resetEyes();
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.show();
+
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.show();   
+
+      delay(delayTime);
+                     
+    //********* STEP THREE *********//
+      resetEyes();
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(11, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.show();
+
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(11, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.show();                  
+
+      delay(delayTime);
+
+    //********** STEP FOUR *********//
+      resetEyes();
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.show();
+
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.show();   
+      delay(delayTime);
+                    
+    //********** STEP FIVE *********//
+      resetEyes();
+      pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+      pixel1.show();
+      
+      pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+      pixel2.show();
+  
+}
+
+void eyesSurprisedBlink(){
+  
+    //*********** BLINK CYCLE ***********//
+  
+    //********** STEP ONE **********//
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    
+    //********** STEP TWO **********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+  
+    //********* STEP THREE *********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+
+    //********** STEP FOUR *********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+
+    //********** STEP FIVE *********//
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 0 0 0 1 //    // 1 0 0 0 1 //
+    // 1 1 1 1 1 //    // 1 1 1 1 1 //
+    
+    //********** STEP ONE **********//
+      resetEyes();
+      pixel1.setPixelColor(0, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(2, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(3, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(20, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(21, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(24, pixel1.Color(red,green,blue));
+      pixel1.show();
+    
+      pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(2, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(3, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(4, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(21, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(24, pixel2.Color(red,green,blue));
+      pixel2.show();
+
+      delay(delayTime);
+
+    //********** STEP TWO **********//
+      resetEyes();
+      pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+      pixel1.show();
+
+      pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(18, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+      pixel2.show();
+    
+      delay(delayTime);
+      
+    //********* STEP THREE *********//
+      resetEyes();
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(11, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.show();
+       
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(11, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.show();     
+       
+      delay(delayTime);
+      
+    //********** STEP FOUR *********//
+      resetEyes();
+      pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(18, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+      pixel1.show();
+
+      pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(18, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+      pixel2.show();
+    
+      delay(delayTime);
+      
+    //********** STEP FIVE *********//
+      resetEyes();    
+      pixel1.setPixelColor(0, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(1, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(2, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(3, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(4, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(5, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(9, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(14, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(15, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(19, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(20, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(21, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(22, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(23, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(24, pixel1.Color(red,green,blue));
+      pixel1.show();
+    
+      pixel2.setPixelColor(0, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(1, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(2, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(3, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(4, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(5, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(9, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(14, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(15, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(19, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(20, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(21, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(22, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(23, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(24, pixel2.Color(red,green,blue));
+      pixel2.show();
+}
+
+void eyesReallyBlink(){
+  
+    //*********** BLINK CYCLE ***********//
+  
+    //********** STEP ONE **********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 1 1 1 0 //    // 0 1 1 1 0 //
+    // 1 0 1 1 0 //    // 1 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+          
+    //********** STEP TWO **********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 1 1 1 0 //    // 0 1 1 1 0 //
+    // 1 0 0 0 0 //    // 1 0 0 0 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+        
+    //********* STEP THREE *********//
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+    // 0 1 1 1 0 //    // 0 1 1 1 0 //
+    // 1 0 1 1 0 //    // 1 0 1 1 0 //
+    // 0 0 1 1 0 //    // 0 0 1 1 0 //
+    // 0 0 0 0 0 //    // 0 0 0 0 0 //
+          
+    //********** STEP ONE **********//
+      resetEyes();
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.show();
+      
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.show();
+  
+      delay(delayTime);
+      
+    //********** STEP TWO **********//
+      resetEyes();
+      pixel1.setPixelColor(11, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(19, pixel1.Color(red,green,blue));      
+      pixel1.show();
+      
+      pixel2.setPixelColor(11, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(19, pixel2.Color(red,green,blue));      
+      pixel2.show();
+                              
+      delay(delayTime);
+      
+    //********* STEP THREE *********//
+      resetEyes();
+      pixel1.setPixelColor(6, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(7, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(8, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(10, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(12, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(13, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(16, pixel1.Color(red,green,blue));
+      pixel1.setPixelColor(17, pixel1.Color(red,green,blue));
+      pixel1.show();
+      
+      pixel2.setPixelColor(6, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(7, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(8, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(10, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(12, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(13, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(16, pixel2.Color(red,green,blue));
+      pixel2.setPixelColor(17, pixel2.Color(red,green,blue));
+      pixel2.show();
+        
+}
+
+// mouth void =======================================================================================================================================================================================
+
+void mouthNormal(){
+// 0 0 0 0 0 0 0 0 //   
+// 1 0 0 0 0 0 0 1 //
+// 0 1 0 0 0 0 1 0 //
+// 0 0 1 1 1 1 0 0 //
+// 0 0 0 0 0 0 0 0 //
+
+      pixel3.setPixelColor(8, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(15, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(26, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(27, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(28, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(29, pixel3.Color(red,green,blue));
+      pixel3.show();
+      
+}
+
+void mouthHappy(){
+// 1 1 1 1 1 1 1 1 //
+// 1 0 0 0 0 0 0 1 //
+// 0 1 0 0 0 0 1 0 //
+// 0 0 1 0 0 1 0 0 // 
+// 0 0 0 1 1 0 0 0 //   
+
+      pixel3.setPixelColor(0, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(1, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(2, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(3, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(4, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(5, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(6, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(7, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(8, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(15, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(26, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(29, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(35, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(36, pixel3.Color(red,green,blue));
+      pixel3.show();
+
+}
+
+void mouthFrown(){
+// 0 0 0 0 0 0 0 0 //
+// 0 0 1 1 1 1 0 0 //
+// 0 1 0 0 0 0 1 0 //
+// 1 0 0 0 0 0 0 1 // 
+// 0 0 0 0 0 0 0 0 //   
+
+      pixel3.setPixelColor(10, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(11, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(12, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(13, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(24, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(31, pixel3.Color(red,green,blue));
+      pixel3.show();
+}
+
+void mouthSad(){
+// 0 0 0 1 1 0 0 0 //
+// 0 0 1 0 0 1 0 0 //
+// 0 1 0 0 0 0 1 0 //
+// 1 0 0 0 0 0 0 1 //
+// 1 1 1 1 1 1 1 1 //
+
+      pixel3.setPixelColor(3, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(4, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(10, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(13, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(24, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(31, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(32, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(33, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(34, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(35, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(36, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(37, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(38, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(39, pixel3.Color(red,green,blue));
+      pixel3.show();
+        
+}
+
+void mouthSquiggle(){
+// 0 0 0 0 0 0 0 0 //
+// 0 1 0 0 0 1 0 0 //
+// 1 0 1 0 1 0 1 0 //
+// 0 0 0 1 0 0 0 1 // 
+// 0 0 0 0 0 0 0 0 //   
+
+      pixel3.setPixelColor(10, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(14, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(16, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(18, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(20, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(24, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(28, pixel3.Color(red,green,blue));
+      pixel3.show();
+      
+}
+
+void mouthSurprised(){
+// 0 0 0 1 1 0 0 0 //
+// 0 0 1 0 0 1 0 0 //
+// 0 1 0 0 0 0 1 0 //
+// 0 0 1 0 0 1 0 0 // 
+// 0 0 0 1 1 0 0 0 //   
+
+      pixel3.setPixelColor(3, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(4, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(10, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(13, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(26, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(29, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(35, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(36, pixel3.Color(red,green,blue));
+      pixel3.show();
+}
+
+void mouthLine(){
+// 0 0 0 0 0 0 0 0 //
+// 0 0 0 0 0 0 0 0 //
+// 1 1 1 1 1 1 1 1 //
+// 0 0 0 0 0 0 0 0 //
+// 0 0 0 0 0 0 0 0 //   
+
+      pixel3.setPixelColor(16, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(17, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(18, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(19, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(20, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(21, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(22, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(23, pixel3.Color(red,green,blue));
+      pixel3.show();
+}
+
+void mouthCrooked(){
+// 1 0 0 0 0 0 0 0 //
+// 0 1 1 0 0 0 0 0 //
+// 0 0 0 1 1 0 0 0 //
+// 0 0 0 0 0 1 1 0 //
+// 0 0 0 0 0 0 0 1 //
+
+      pixel3.setPixelColor(0, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(13, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(14, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(19, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(20, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(25, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(26, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(39, pixel3.Color(red,green,blue));
+      pixel3.show();
+}
+
+void mouthPucker(){
+// 0 0 0 1 1 0 0 0 //
+// 0 0 1 0 0 0 0 0 //
+// 0 0 0 1 1 0 0 0 //
+// 0 0 1 0 0 0 0 0 //
+// 0 0 0 1 1 0 0 0 //
+      
+      pixel3.setPixelColor(3, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(4, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(13, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(19, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(20, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(29, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(35, pixel3.Color(red,green,blue));
+      pixel3.setPixelColor(36, pixel3.Color(red,green,blue));
+      pixel3.show();
+}
+
+void loop() {
+    unsigned long currentMillis = millis();
+
+
+// Keypad setup =================================================================================================================================================================================================  
+  char key = customKeypad.getKey();
+  
+  switch(key){
+    case 'A':
+      letterInput = 'A';
+      break;
+    case 'B':
+      letterInput = 'B';
+      break;
+    case 'C':
+      letterInput = 'C';
+      break;
+    case 'D':
+      letterInput = 'D';
+      break;
+    case '*':
+      resetEyes();
+      resetMouth();
+      red = 127;            //aquamarine
+      green = 255;
+      blue = 212;
+      break;
+    case '0':
+      resetEyes();
+      resetMouth();
+      red = 255;            //red
+      green = 32;
+      blue = 82;
+      break;
+    case '#':
+      resetEyes();
+      resetMouth();
+      red = 255;            //orange
+      green = 105;
+      blue = 180;
+      break;
+    case '1':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 1;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 1;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 1;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 10;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 1;
+      break;
+    case '2':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 2;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 2;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 2;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 11;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 2;
+      break;
+    case '3':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 3;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 3;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 3;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 12;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 3;
+      break;
+    case '4':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 4;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 4;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 4;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 13;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 4;
+      break;
+    case '5':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 5;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 5;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 5;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 14;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 5;
+      break;
+    case '6':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 6;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 6;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 6;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 15;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 6;
+      break;
+    case '7':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 7;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 7;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 7;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 16;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 7;
+      break;
+    case '8':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 8;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 8;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 8;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 17;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 8;
+      break;
+    case '9':
+      resetEyes();
+      resetMouth();
+      switch(letterInput){
+        case 'A':
+          eyeNumInput = 9;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            mouthNumInput = 1;
+                              }
+          break;
+        case 'B':
+          mouthNumInput = 9;
+          if(faceSetInput > 0){
+            faceSetInput = 0;
+            eyeNumInput = 1;
+                              }
+          break;
+        case 'C':
+          faceSetInput = 9;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        case 'D':
+          faceSetInput = 18;
+          if (eyeNumInput > 0 || mouthNumInput > 0){
+            eyeNumInput = 0;
+            mouthNumInput = 0;
+                                                    } 
+          break;
+        }
+      numberInput = 9;
+      break;   
+  }
+
+//===============================================================================================================================================================================================================//
+  if (faceSetInput == 0){
+    // switch for changes in eye
+      switch(eyeNumInput){
+        case 1:
+          eyesNormal();
+          if((currentMillis - previousMillis) >= randomBlinkTime){
+            previousMillis = currentMillis;
+            eyesNormalBlink();
+            randomBlinkTime = random(2000, 10000);
+          }
+          break;
+        case 2:
+          eyesHappy();
+          break;
+        case 3:
+          eyesAngry();
+          break;
+        case 4:
+          eyesClosed();
+          break;
+        case 5:
+          eyesDizzy();
+          break;
+        case 6:
+          eyesDead();
+          break;
+        case 7:
+          eyesSquint();
+          break;
+        case 8:
+          eyesSurprised();
+           if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesSurprisedBlink();
+              randomBlinkTime = random(2000, 10000);
+          }
+          break;
+        case 9:
+          eyesReally();
+            if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesNormalBlink();
+              randomBlinkTime = random(2000, 10000);
+          }
+          break;   
+      }
+    switch(mouthNumInput){
+      case 1:
+        mouthNormal();
+        break;
+      case 2:
+        mouthHappy();
+        break;
+      case 3:
+        mouthFrown();
+        break;
+      case 4:
+        mouthSad();
+        break;
+      case 5:        
+        mouthSquiggle();
+        break;
+      case 6:       
+        mouthSurprised();
+        break;
+      case 7:        
+        mouthLine();
+        break;
+      case 8:        
+        mouthCrooked();
+        break;
+      case 9:        
+        mouthPucker();
+        break;
+      }
+  }
+  else if (faceSetInput > 0){
+    switch(faceSetInput){
+      case 1:
+        mouthNormal();
+        eyesNormal();
+          if((currentMillis - previousMillis) >= randomBlinkTime){
+            previousMillis = currentMillis;
+            eyesNormalBlink();
+            randomBlinkTime = random(2000, 10000);
+          }
+        break;
+      case 2:
+        eyesHappy();
+        mouthHappy();
+        break;
+      case 3:
+        eyesWink();
+        mouthHappy();
+        break;
+      case 4:
+        eyesAngry();
+        mouthFrown();
+        break;
+      case 5:
+        eyesAngry();
+        mouthPucker();
+        break;
+      case 6:
+        eyesAngry();
+        mouthLine();
+        break;
+      case 7:
+        eyesClosed();
+        mouthLine();
+        break;
+      case 8:
+        eyesClosed();
+        mouthPucker();
+        break;
+      case 9:
+        eyesClosed();
+        mouthFrown();
+        break;
+      case 10:
+        eyesDizzy();
+        mouthSquiggle();
+        break;
+      case 11:
+        eyesDizzy();
+        mouthFrown();
+        break;
+      case 12:
+        eyesDead();
+        mouthLine();
+        break;
+      case 13:
+        eyesDead();
+        mouthFrown();
+        break;
+      case 14:
+        mouthSurprised();
+        eyesSurprised();
+           if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesSurprisedBlink();
+              randomBlinkTime = random(2000, 10000);
+          }                
+        break;
+      case 15:
+        mouthLine();
+        eyesSurprised();
+           if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesSurprisedBlink();
+              randomBlinkTime = random(2000, 10000);        
+        break;
+      case 16:
+        eyesSquint();
+        mouthCrooked();
+        break;
+      case 17:
+        eyesReally();
+            if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesNormalBlink();
+              randomBlinkTime = random(2000, 10000);
+          }
+        mouthLine();
+        break;
+      case 18:
+        eyesReally();
+            if((currentMillis - previousMillis) >= randomBlinkTime){
+              previousMillis = currentMillis;
+              eyesNormalBlink();
+              randomBlinkTime = random(2000, 10000);
+          }
+        mouthNormal();
+        break;
+    }
+  }
+
+// debugging ==================================================================================================================================================================================================
+
+  Serial.println("key = " + key);
+  Serial.println("letterinput = " + letterInput);
+  Serial.println("numberInput = " + numberInput);
+  Serial.println("eyeNumInput = " + eyeNumInput);
+  Serial.println("mouthNumInput = " + mouthNumInput);
+  Serial.println("faceSetInput = " + faceSetInput);
+
+}
+}
